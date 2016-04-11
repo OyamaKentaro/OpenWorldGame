@@ -18,14 +18,14 @@ public class PlayerMovement : MovementBase {
         base.Update();
     }
 
-    protected override void ExecuteCommand(cmd.CommandID command)
+    protected override void ExecuteCommand(CommandData command)
     {
-        switch (command)
+        switch (command.id)
         {
             case cmd.CommandID.ID_MOVE_LEFT:
             {
                 m_work = Vector3.zero;
-                m_work.x = -1.0f * Time.deltaTime;
+                m_work.x = -1.0f;
                 AddVelocity(m_work);
                 break;
             }
@@ -33,7 +33,7 @@ public class PlayerMovement : MovementBase {
             case cmd.CommandID.ID_MOVE_RIGHT:
             {
                 m_work = Vector3.zero;
-                m_work.x = 1.0f * Time.deltaTime;
+                m_work.x = 1.0f;
                 AddVelocity(m_work);
                 break;
             }
@@ -41,7 +41,7 @@ public class PlayerMovement : MovementBase {
             case cmd.CommandID.ID_MOVE_DOWN:
             {
                 m_work = Vector3.zero;
-                m_work.z = -1.0f * Time.deltaTime;
+                m_work.z = -1.0f;
                 AddVelocity(m_work);
                 break;
             }
@@ -49,7 +49,7 @@ public class PlayerMovement : MovementBase {
             case cmd.CommandID.ID_MOVE_UP:
             {
                 m_work = Vector3.zero;
-                m_work.z = 1.0f * Time.deltaTime;
+                m_work.z = 1.0f;
                 AddVelocity(m_work);
                 break;
             }
@@ -57,6 +57,14 @@ public class PlayerMovement : MovementBase {
             case cmd.CommandID.ID_NO_INPUT:
             {
                 BrakeVelocity();
+                break;
+            }
+
+            case cmd.CommandID.ID_MOVE_FREE:
+            {
+                m_work.x = command.vectorWork.x;
+                m_work.z = command.vectorWork.y;
+                AddVelocity(m_work);
                 break;
             }
 
@@ -73,6 +81,8 @@ public class PlayerMovement : MovementBase {
         {
             return;
         }
+
+        Debug.Log(velocity.normalized);
 
         float speed = Vector3.Distance(Vector3.zero, m_rigidbody.velocity);
         m_rigidbody.velocity += velocity.normalized * m_moveSpeed;

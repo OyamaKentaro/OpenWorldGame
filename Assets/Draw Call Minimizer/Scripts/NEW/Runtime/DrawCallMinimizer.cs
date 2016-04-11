@@ -195,11 +195,13 @@ namespace DCM {
         }
 
         void AddCollider(ref GameObject go, Mesh mesh) {
-            go.AddComponent<MeshCollider>();
-            go.GetComponent<MeshCollider>().sharedMesh = mesh;
+            MeshCollider collider = go.AddComponent<MeshCollider>();
+            collider.sharedMesh = mesh;
+            collider.convex = true;
+            collider.material = Resources.Load<PhysicMaterial>("PhysicsMaterial/Block");
 
-            go.AddComponent<Rigidbody>();
-            Rigidbody rigidBody = go.GetComponent<Rigidbody>();
+            Rigidbody rigidBody = go.AddComponent<Rigidbody>();
+            rigidBody.mass = 100;
             rigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
 

@@ -10,6 +10,7 @@ namespace cmd
         ID_MOVE_RIGHT,
         ID_MOVE_DOWN,
         ID_MOVE_UP,
+        ID_MOVE_FREE,
         ID_JUMP,
 
         ID_NO_INPUT,
@@ -25,7 +26,9 @@ public class Command : MonoBehaviour {
     public struct CommandData
     {
         public cmd.CommandID id;
-        public int frame; 
+        public int intWork;
+        public float floatWork;
+        public Vector3 vectorWork;
     }
 
     List<CommandData> m_stack;
@@ -35,21 +38,21 @@ public class Command : MonoBehaviour {
     }
 
     public virtual void Update () {
+        int count = 0;
         foreach (CommandData data in m_stack)
         {
-            ExecuteCommand(data.id);
+            Debug.Log(count);
+            ++count;
+            ExecuteCommand(data);
         }
 
         m_stack.Clear();
     }
 
-    public void AddCommand(cmd.CommandID command)
+    public void AddCommand(CommandData command)
     {
-        CommandData data = new CommandData();
-        data.id = command;
-        data.frame = 0;
-        m_stack.Add(data);
+        m_stack.Add(command);
     }
 
-    protected virtual void ExecuteCommand(cmd.CommandID command) {}
+    protected virtual void ExecuteCommand(CommandData command) {}
 }
