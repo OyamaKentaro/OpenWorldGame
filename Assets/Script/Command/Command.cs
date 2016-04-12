@@ -13,7 +13,6 @@ namespace cmd
         ID_MOVE_FREE,
         ID_JUMP,
 
-        ID_NO_INPUT,
         /*
         ID_SIT_DOWN,
         ID_ATTACK,
@@ -32,18 +31,18 @@ public class Command : MonoBehaviour {
     }
 
     List<CommandData> m_stack;
+    bool m_commandExecute = false;
 
     public virtual void Start () {
         m_stack = new List<CommandData>();
     }
 
     public virtual void Update () {
-        int count = 0;
+        m_commandExecute = false;
         foreach (CommandData data in m_stack)
         {
-            Debug.Log(count);
-            ++count;
             ExecuteCommand(data);
+            m_commandExecute = true;
         }
 
         m_stack.Clear();
@@ -52,6 +51,11 @@ public class Command : MonoBehaviour {
     public void AddCommand(CommandData command)
     {
         m_stack.Add(command);
+    }
+
+    public bool IsCommandExecute()
+    {
+        return m_commandExecute;
     }
 
     protected virtual void ExecuteCommand(CommandData command) {}

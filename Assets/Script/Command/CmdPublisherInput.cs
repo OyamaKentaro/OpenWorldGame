@@ -17,6 +17,7 @@ public class CmdPublisherInput : MonoBehaviour {
     Command.CommandData m_commandWork = new Command.CommandData();
     PublisherInput.MouseState m_mouseState;
     Vector3 m_dragStartPos = new Vector3();
+    Vector3 m_posWork = new Vector3();
 
     // Use this for initialization
     void Start () {
@@ -32,16 +33,55 @@ public class CmdPublisherInput : MonoBehaviour {
     }
 
     void UpdateMouseState() {
+        bool down = false;
+        bool keep = false;
+        bool up = false;
+        m_posWork = Vector3.zero;
+
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer )
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                down = true;
+                m_posWork = touch.position;
+            } else if (touch.phase == TouchPhase.Stationary)
+            {
+                keep = true;
+            } else if (touch.phase == TouchPhase.Ended)
+            {
+                up = true;
+            }
+        } else
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                down = true;
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                keep = true;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                up = true;
+            }
+
+            m_posWork = Input.mousePosition;
+        }
+
         switch (m_mouseState)
         {
             // 何も入力していない.
             case PublisherInput.MouseState.STATE_NONE:
                 {
                     // 左クリックダウン.
-                    if (Input.GetMouseButtonDown(0))
+                    if (down)
                     {
                         m_mouseState = PublisherInput.MouseState.STATE_DOWN;
-                        Vector3 pos = Input.mousePosition;
+                        Vector3 pos = m_posWork;
                         pos.z = 0.0f;
                         m_dragStartPos = pos;
                     }
@@ -51,9 +91,9 @@ public class CmdPublisherInput : MonoBehaviour {
             // キー押し込み.
             case PublisherInput.MouseState.STATE_DOWN:
                 {
-                    if (Input.GetMouseButton(0))
+                    if (keep)
                     {
-                        Vector3 pos = Input.mousePosition;
+                        Vector3 pos = m_posWork;
                         pos.z = 0.0f;
                         if (pos != m_dragStartPos)
                         {
@@ -69,7 +109,7 @@ public class CmdPublisherInput : MonoBehaviour {
             // ドラッグ.
             case PublisherInput.MouseState.STATE_DRAG:
                 {
-                    if (Input.GetMouseButtonUp(0))
+                    if (up)
                     {
                         m_mouseState = PublisherInput.MouseState.STATE_UP;
                     }
@@ -94,7 +134,7 @@ public class CmdPublisherInput : MonoBehaviour {
                     // このマウスの判定はいらんだろうけど一応ね.
                     if (Input.GetMouseButton(0))
                     {
-                        Vector3 pos = Input.mousePosition;
+                        Vector3 pos = m_posWork;
                         pos.z = 0.0f;
 
                         m_commandWork.id = cmd.CommandID.ID_MOVE_FREE;
@@ -103,57 +143,37 @@ public class CmdPublisherInput : MonoBehaviour {
                     }
                     break;
                 }
-
-            case PublisherInput.MouseState.STATE_NONE:
-                {
-                    m_commandWork.id = cmd.CommandID.ID_NO_INPUT;
-                    m_command.AddCommand(m_commandWork);
-                    break;
-                }
         }
     }
 
     void UpdateKeybord() {
-        bool isInput = false;
-
         if (Input.GetKey(KeyCode.A))
         {
             m_commandWork.id = cmd.CommandID.ID_MOVE_LEFT;
             m_command.AddCommand(m_commandWork);
-            isInput = true;
         }
 
         if (Input.GetKey(KeyCode.S))
         {
             m_commandWork.id = cmd.CommandID.ID_MOVE_DOWN;
             m_command.AddCommand(m_commandWork);
-            isInput = true;
         }
 
         if (Input.GetKey(KeyCode.D))
         {
             m_commandWork.id = cmd.CommandID.ID_MOVE_RIGHT;
             m_command.AddCommand(m_commandWork);
-            isInput = true;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
             m_commandWork.id = cmd.CommandID.ID_MOVE_UP;
             m_command.AddCommand(m_commandWork);
-            isInput = true;
         }
 
         if (Input.GetKeyDown("space"))
         {
             m_commandWork.id = cmd.CommandID.ID_JUMP;
-            m_command.AddCommand(m_commandWork);
-            isInput = true;
-        }
-
-        if (!isInput)
-        {
-            m_commandWork.id = cmd.CommandID.ID_NO_INPUT;
             m_command.AddCommand(m_commandWork);
         }
     }

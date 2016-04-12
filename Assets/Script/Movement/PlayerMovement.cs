@@ -16,6 +16,10 @@ public class PlayerMovement : MovementBase {
     public override void Update()
     {
         base.Update();
+        if (!IsCommandExecute())
+        {
+            BrakeVelocity();
+        }
     }
 
     protected override void ExecuteCommand(CommandData command)
@@ -51,12 +55,6 @@ public class PlayerMovement : MovementBase {
                 m_work = Vector3.zero;
                 m_work.z = 1.0f;
                 AddVelocity(m_work);
-                break;
-            }
-
-            case cmd.CommandID.ID_NO_INPUT:
-            {
-                BrakeVelocity();
                 break;
             }
 
