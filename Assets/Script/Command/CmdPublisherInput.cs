@@ -18,6 +18,7 @@ public class CmdPublisherInput : MonoBehaviour {
     PublisherInput.MouseState m_mouseState;
     Vector3 m_dragStartPos = new Vector3();
     Vector3 m_posWork = new Vector3();
+    public GameObject m_debugObject = null;
 
     // Use this for initialization
     void Start () {
@@ -30,6 +31,13 @@ public class CmdPublisherInput : MonoBehaviour {
         //UpdateKeybord();
         UpdateMouseState();
         UpdateMouse();
+
+        if (m_debugObject)
+        {
+            Vector3 mousePos = m_posWork;
+            mousePos.z = 10.0f;
+            m_debugObject.transform.position = Camera.main.ScreenToWorldPoint(mousePos);
+        }
     }
 
     void UpdateMouseState() {
@@ -82,7 +90,7 @@ public class CmdPublisherInput : MonoBehaviour {
                     {
                         m_mouseState = PublisherInput.MouseState.STATE_DOWN;
                         Vector3 pos = m_posWork;
-                        pos.z = 0.0f;
+                        pos.z = 10.0f;
                         m_dragStartPos = pos;
                     }
                     break;
@@ -94,7 +102,7 @@ public class CmdPublisherInput : MonoBehaviour {
                     if (keep)
                     {
                         Vector3 pos = m_posWork;
-                        pos.z = 0.0f;
+                        pos.z = 10.0f;
                         if (pos != m_dragStartPos)
                         {
                             m_mouseState = PublisherInput.MouseState.STATE_DRAG;
