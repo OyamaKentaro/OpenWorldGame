@@ -44,7 +44,6 @@ public class CmdPublisherInput : MonoBehaviour {
         bool down = false;
         bool keep = false;
         bool up = false;
-        m_posWork = Vector3.zero;
 
         if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer )
         {
@@ -53,12 +52,18 @@ public class CmdPublisherInput : MonoBehaviour {
             {
                 down = true;
                 m_posWork = touch.position;
-            } else if (touch.phase == TouchPhase.Stationary)
+            }
+
+            if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
             {
                 keep = true;
-            } else if (touch.phase == TouchPhase.Ended)
+                m_posWork = touch.position;
+            }
+
+            if (touch.phase == TouchPhase.Ended)
             {
                 up = true;
+                m_posWork = touch.position;
             }
         } else
         {
@@ -90,7 +95,7 @@ public class CmdPublisherInput : MonoBehaviour {
                     {
                         m_mouseState = PublisherInput.MouseState.STATE_DOWN;
                         Vector3 pos = m_posWork;
-                        pos.z = 10.0f;
+                        pos.z = 0.0f;
                         m_dragStartPos = pos;
                     }
                     break;
@@ -102,7 +107,7 @@ public class CmdPublisherInput : MonoBehaviour {
                     if (keep)
                     {
                         Vector3 pos = m_posWork;
-                        pos.z = 10.0f;
+                        pos.z = 0.0f;
                         if (pos != m_dragStartPos)
                         {
                             m_mouseState = PublisherInput.MouseState.STATE_DRAG;
@@ -139,16 +144,19 @@ public class CmdPublisherInput : MonoBehaviour {
         {
             case PublisherInput.MouseState.STATE_DRAG:
                 {
-                    // このマウスの判定はいらんだろうけど一応ね.
-                    if (Input.GetMouseButton(0))
+                    Vector3 pos = Vector3.zero;
+                    if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
                     {
-                        Vector3 pos = m_posWork;
-                        pos.z = 0.0f;
-
-                        m_commandWork.id = cmd.CommandID.ID_MOVE_FREE;
-                        m_commandWork.vectorWork = pos - m_dragStartPos;
-                        m_command.AddCommand(m_commandWork);
+                        pos = m_posWork;
+                    } else
+                    {
+                        pos = Input.mousePosition;
                     }
+                    pos.z = 0.0f;
+
+                    m_commandWork.id = cmd.CommandID.ID_MOVE_FREE;
+                    m_commandWork.vectorWork = pos - m_dragStartPos;
+                    m_command.AddCommand(m_commandWork);
                     break;
                 }
         }
