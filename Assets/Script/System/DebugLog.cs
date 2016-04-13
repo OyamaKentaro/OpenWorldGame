@@ -13,7 +13,6 @@ public class DebugLog : MonoBehaviour {
     // Use this for initialization
     void Start () {
         m_text = "";
-        GUI.skin.textField.fontSize = 10;
     }
 
     // Update is called once per frame

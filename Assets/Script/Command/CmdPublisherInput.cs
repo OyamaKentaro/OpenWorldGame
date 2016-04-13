@@ -20,6 +20,7 @@ public class CmdPublisherInput : MonoBehaviour {
     Vector3 m_posWork = new Vector3();
     GameManager m_gameManager = null;
     public GameObject m_debugObject = null;
+    public GameObject m_debugObject2 = null;
 
     // Use this for initialization
     void Start () {
@@ -45,6 +46,13 @@ public class CmdPublisherInput : MonoBehaviour {
             mousePos.z = 10.0f;
             m_debugObject.transform.position = Camera.main.ScreenToWorldPoint(mousePos);
         }
+
+        if (m_debugObject2)
+        {
+            Vector3 mousePos = m_dragStartPos;
+            mousePos.z = 10.0f;
+            m_debugObject2.transform.position = Camera.main.ScreenToWorldPoint(mousePos);
+        }
     }
 
     void UpdateMouseState() {
@@ -54,23 +62,26 @@ public class CmdPublisherInput : MonoBehaviour {
 
         if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer )
         {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
+            if (Input.touchCount > 0)
             {
-                down = true;
-                m_posWork = touch.position;
-            }
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    down = true;
+                    m_posWork = touch.position;
+                }
 
-            if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
-            {
-                keep = true;
-                m_posWork = touch.position;
-            }
+                if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
+                {
+                    keep = true;
+                    m_posWork = touch.position;
+                }
 
-            if (touch.phase == TouchPhase.Ended)
-            {
-                up = true;
-                m_posWork = touch.position;
+                if (touch.phase == TouchPhase.Ended)
+                {
+                    up = true;
+                    m_posWork = touch.position;
+                }
             }
         } else
         {

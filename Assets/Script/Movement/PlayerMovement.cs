@@ -20,6 +20,12 @@ public class PlayerMovement : MovementBase {
         {
             BrakeVelocity();
         }
+
+        // 暫定的なリセット処理.
+        if (transform.position.y < -10.0f)
+        {
+            m_rigidbody.position = new Vector3(0.0f, 3.0f, 0.0f);
+        }
     }
 
     protected override void ExecuteCommand(CommandData command)
