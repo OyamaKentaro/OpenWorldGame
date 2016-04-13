@@ -18,12 +18,19 @@ public class CmdPublisherInput : MonoBehaviour {
     PublisherInput.MouseState m_mouseState;
     Vector3 m_dragStartPos = new Vector3();
     Vector3 m_posWork = new Vector3();
+    GameManager m_gameManager = null;
     public GameObject m_debugObject = null;
 
     // Use this for initialization
     void Start () {
         m_command = GetComponent<MovementBase>();
         m_mouseState = PublisherInput.MouseState.STATE_NONE;
+
+        GameObject gameSystem = GameObject.Find("GameSystem");
+        if (gameSystem)
+        {
+            m_gameManager = gameSystem.GetComponent<GameManager>();
+        }
     }
 
     // Update is called once per frame
@@ -93,6 +100,7 @@ public class CmdPublisherInput : MonoBehaviour {
                     // 左クリックダウン.
                     if (down)
                     {
+                        m_gameManager.AddLog("STATE_DOWN");
                         m_mouseState = PublisherInput.MouseState.STATE_DOWN;
                         Vector3 pos = m_posWork;
                         pos.z = 0.0f;
@@ -110,10 +118,12 @@ public class CmdPublisherInput : MonoBehaviour {
                         pos.z = 0.0f;
                         if (pos != m_dragStartPos)
                         {
+                            m_gameManager.AddLog("STATE_DRAG");
                             m_mouseState = PublisherInput.MouseState.STATE_DRAG;
                         }
                     } else
                     {
+                        m_gameManager.AddLog("STATE_UP");
                         m_mouseState = PublisherInput.MouseState.STATE_UP;
                     }
                     break;
@@ -124,6 +134,7 @@ public class CmdPublisherInput : MonoBehaviour {
                 {
                     if (up)
                     {
+                        m_gameManager.AddLog("STATE_UP");
                         m_mouseState = PublisherInput.MouseState.STATE_UP;
                     }
                     break;
@@ -132,6 +143,7 @@ public class CmdPublisherInput : MonoBehaviour {
             // キーリリース.
             case PublisherInput.MouseState.STATE_UP:
                 {
+                    m_gameManager.AddLog("STATE_NONE");
                     m_mouseState = PublisherInput.MouseState.STATE_NONE;
                     break;
                 }
