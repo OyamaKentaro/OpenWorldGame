@@ -19,8 +19,10 @@ public class CmdPublisherInput : MonoBehaviour {
     Vector3 m_dragStartPos = new Vector3();
     Vector3 m_posWork = new Vector3();
     GameManager m_gameManager = null;
+    bool m_isEnablePlay = false;
     public GameObject m_debugObject = null;
     public GameObject m_debugObject2 = null;
+    public float m_playDistanceRatio = 0.2f; // タッチ入力移動判定の遊び 画面の幅に対する割合.
 
     // Use this for initialization
     void Start () {
@@ -154,6 +156,7 @@ public class CmdPublisherInput : MonoBehaviour {
             // キーリリース.
             case PublisherInput.MouseState.STATE_UP:
                 {
+                    m_isEnablePlay = false;
                     m_gameManager.AddLog("STATE_NONE");
                     m_mouseState = PublisherInput.MouseState.STATE_NONE;
                     break;
@@ -179,7 +182,10 @@ public class CmdPublisherInput : MonoBehaviour {
 
                     m_commandWork.id = cmd.CommandID.ID_MOVE_FREE;
                     m_commandWork.vectorWork = pos - m_dragStartPos;
-                    m_command.AddCommand(m_commandWork);
+                    if ((Vector3.Distance(m_commandWork.vectorWork, Vector3.zero) > (Screen.width * m_playDistanceRatio)) || m_isEnablePlay) {
+                        m_isEnablePlay = true;
+                        m_command.AddCommand(m_commandWork);
+                    }
                     break;
                 }
         }

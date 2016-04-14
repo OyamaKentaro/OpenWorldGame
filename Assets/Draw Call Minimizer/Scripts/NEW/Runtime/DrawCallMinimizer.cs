@@ -201,7 +201,7 @@ namespace DCM {
             collider.material = Resources.Load<PhysicMaterial>("PhysicsMaterial/Block");
 
             Rigidbody rigidBody = go.AddComponent<Rigidbody>();
-            rigidBody.mass = 100;
+            rigidBody.mass = 1000;
             rigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
 
