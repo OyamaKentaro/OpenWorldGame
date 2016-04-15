@@ -86,8 +86,6 @@ public class PlayerMovement : MovementBase {
             return;
         }
 
-        Debug.Log(velocity.normalized);
-
         float speed = Vector3.Distance(Vector3.zero, m_rigidbody.velocity);
         m_rigidbody.velocity += velocity.normalized * m_moveSpeed;
 

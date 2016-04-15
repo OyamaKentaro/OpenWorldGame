@@ -9,6 +9,17 @@ public class DebugLog : MonoBehaviour {
     bool m_isDirty = true;
     Rect m_rect = new Rect(10, 10, 150, 200);
     string m_text;
+    bool m_hyde = true;
+
+    public void EnableViewLog()
+    {
+        m_hyde = false;
+    }
+
+    public void DesableViewLog()
+    {
+        m_hyde = true;
+    }
 
     // Use this for initialization
     void Start () {
@@ -32,6 +43,10 @@ public class DebugLog : MonoBehaviour {
 
     void OnGUI ()
     {
+        if (m_hyde)
+        {
+            return;
+        }
         GUI.TextField(m_rect, m_text);
     }
 
